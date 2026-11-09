@@ -86,7 +86,3 @@ If you are running Node-RED natively without Docker, update the `file in` and `f
 | `/fall_out` | Pause/unsubscribe from receiving reminders. |
 
 ---
-
-## 🔒 Security Note
-
-Never commit your active `recipients.json` file or your live Telegram Bot API tokens to GitHub. Ensure `recipients.json` remains listed inside your `.gitignore`.
