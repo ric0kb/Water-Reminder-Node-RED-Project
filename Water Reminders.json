@@ -1,0 +1,734 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Hourly Water Reminders",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "affd9008b8fab86b",
+        "type": "group",
+        "z": "f6f2187d.f17ca8",
+        "name": "Hourly Water Reminders",
+        "style": {
+            "stroke": "#0070c0",
+            "label": true,
+            "fill": "#bfdbef",
+            "color": "#000000"
+        },
+        "nodes": [
+            "8cb885f6a900eb9f",
+            "4e40f995c1d628bf",
+            "13b5b9e950de26d9",
+            "d55fb62eba9167ba",
+            "d8212c5529cb4ee4",
+            "da2ad8afce18c9ca"
+        ],
+        "x": 34,
+        "y": 59,
+        "w": 872,
+        "h": 302
+    },
+    {
+        "id": "a8a3df5510d2fcc6",
+        "type": "group",
+        "z": "f6f2187d.f17ca8",
+        "name": "Subscription Management",
+        "style": {
+            "stroke": "#92d04f",
+            "fill": "#e3f3d3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "28427f19a1e45819",
+            "faa6e2ae01a535d0",
+            "e1e53064dca7b372",
+            "70ed52c3c980704d",
+            "f9baae5c913558cf",
+            "6dd3095787069fe9",
+            "72c033f5b03bcbbb",
+            "16edf6c55979257f"
+        ],
+        "x": 14,
+        "y": 459,
+        "w": 1312,
+        "h": 222
+    },
+    {
+        "id": "572d9bd9cde28375",
+        "type": "group",
+        "z": "f6f2187d.f17ca8",
+        "name": "Check Recipient Lists",
+        "style": {
+            "label": true,
+            "stroke": "#777777",
+            "fill": "#d1d1d1"
+        },
+        "nodes": [
+            "a27d0045603cc5a2",
+            "0852121dea5aa14b",
+            "4092c57a5118c030",
+            "981e923b3585135c"
+        ],
+        "x": -6,
+        "y": 759,
+        "w": 1112,
+        "h": 82
+    },
+    {
+        "id": "a0427897c5b3104e",
+        "type": "group",
+        "z": "f6f2187d.f17ca8",
+        "name": "Hourly AQ Updates",
+        "style": {
+            "label": true,
+            "stroke": "#6f2fa0",
+            "fill": "#dbcbe7"
+        },
+        "nodes": [
+            "e41824da82948b0c",
+            "8b9f0c622786c12e",
+            "aba2db886624c3e1",
+            "46a2ec19682c18ec",
+            "f72c7674168df4b1",
+            "e40d458e80f065b0",
+            "ecd23d051c17ae41"
+        ],
+        "x": -26,
+        "y": 959,
+        "w": 1012,
+        "h": 262
+    },
+    {
+        "id": "8cb885f6a900eb9f",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "g": "affd9008b8fab86b",
+        "name": "Hourly Schedule (08:01 - 22:01 SGT)",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "0 0-13 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 100,
+        "wires": [
+            [
+                "13b5b9e950de26d9"
+            ]
+        ]
+    },
+    {
+        "id": "8c75107f22aa3659",
+        "type": "telegram sender",
+        "z": "f6f2187d.f17ca8",
+        "name": "The Nag Master 3000",
+        "bot": "2059cd5c82b74717",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1760,
+        "y": 320,
+        "wires": [
+            [
+                "1038f3ce822be854"
+            ]
+        ]
+    },
+    {
+        "id": "4e40f995c1d628bf",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "affd9008b8fab86b",
+        "name": "Get Random Health tip",
+        "func": "// The incoming msg.payload is now the array of water reminders from the change node\nconst waterReminders = msg.payload;\n\n// Ensure it's actually an array and not empty\nif (!Array.isArray(waterReminders) || waterReminders.length === 0) {\n    node.warn(\"No water reminders array found in msg.payload or it's empty.\");\n    return null; // Stop the flow if no valid array\n}\n\n// Generate a random index\nconst randomIndex = Math.floor(Math.random() * waterReminders.length);\n\n// Set msg.payload to the randomly selected reminder\nmsg.reminder = waterReminders[randomIndex];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 240,
+        "y": 220,
+        "wires": [
+            [
+                "d55fb62eba9167ba"
+            ]
+        ]
+    },
+    {
+        "id": "13b5b9e950de26d9",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "g": "affd9008b8fab86b",
+        "name": "waterReminders",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[\"Soldier, hydrate! Your body's not a desert, drink up now!\\n\",\"Water break! Time to top up your internal engine, steady!\\n\",\"Don't be a dehydrated hero, lim zui (drink water)!\\n\",\"Feeling blur like sotong? Might be lack of water, hor! Drink up!\\n\",\"Your body is a temple, not a dry well. Hydrate, now!\\n\",\"Water first, complain later. Bottoms up!\\n\",\"Heat's no match for a well-hydrated soldier. Chiong sua (charge with water)!\\n\",\"Don't wait till you're thirsty; that's too late! Lim zui!\\n\",\"This isn't optional, it's mission critical. Hydrate or suffer!\\n\",\"Your water bottle is your best buddy. Don't neglect it, drink!\\n\",\"An empty bottle is a sad bottle. Fill 'er up and drink!\\n\",\"Stay sharp, stay hydrated. Your brain needs that H2O!\\n\",\"No water, no power! Recharge with liquid energy!\\n\",\"Think of water as your internal lubricant. Keep things running smoothly!\\n\",\"Every sip counts towards peak performance. Keep going!\\n\",\"Hydrate or be 'tekan' (punished) by fatigue. Your choice, recruit!\\n\",\"Don't let dehydration sneak up on you like an ambush. Stay alert, drink!\\n\",\"From bunk to field, water is your best friend. Embrace it!\\n\",\"Your kidneys are working hard. Give them a break, drink water!\\n\",\"A well-hydrated soldier is a smart soldier. What's your next move? Drink!\\n\",\"Water is the basic for survival. Don't forget your basics!\\n\",\"Feeling low batt? Water is your instant charger. Lim zui!\\n\",\"For better focus during admin time, drink water!\\n\",\"Your body is screaming for water. Listen to it, faster!\\n\",\"This is not a drill! Drink your water now, soldier!\\n\",\"Don't be a dry sponge, absorb that essential H2O!\\n\",\"Clear skin, clear mind, plenty of water. It's a simple formula!\\n\",\"Water is your body's cooling system. Don't overheat, drink!\\n\",\"The best defense against cramps? You guessed it: water!\\n\",\"Before you fall in, make sure you've chiong (consumed) water!\\n\",\"Your cells are thirsty. Quench their thirst, hydrate!\\n\",\"This isn't a suggestion, it's a direct order: Drink Water!\\n\",\"Remember the 2-litre rule? Make sure you hit your target!\\n\",\"Are you Phua Chu Kang, you got water one right? Then drink water!\\n\",\"No water, no energy for stand-by. Don't play play!\\n\",\"Your body is a machine; water is its premium fuel. Fill up!\\n\",\"Combat fatigue with water. It's your invisible weapon!\\n\",\"Don't let thirst become your weakness. Be strong, drink water!\\n\",\"Every drop helps your system run efficiently. Keep the flow!\\n\",\"For a strong immune system, keep yourself hydrated, Encik says!\\n\",\"Headache from the heat? Water is your first aid. Drink up!\\n\",\"Your performance depends on it. Don't shortchange yourself, drink water!\\n\",\"Feeling a bit 'sian'? Sometimes all you need is water, lor.\\n\",\"Water: Because even superheroes need to hydrate.\\n\",\"Don't let dehydration sabotage your efforts. Drink smarter!\\n\",\"Your voice needs lubrication too. Stay hydrated for clear commands!\\n\",\"A hydrated soldier is a happy soldier. True story, lah!\\n\",\"This is not a water parade, but you should still be drinking!\\n\",\"Keep calm and drink water. It helps with stress too!\\n\",\"The best way to cool down after PT? Water, water, water!\\n\",\"Think of water as your body's personal cleaner. Wash away the toxins!\\n\",\"Don't wait for your buddy to remind you. Take initiative, drink!\\n\",\"Feeling lethargic? A bottle of water might be all you need to perk up.\\n\",\"Water is your instant charger. Tap into it!\\n\",\"Your brain is 75% water. Don't let it shrink, drink up!\\n\",\"Staying hydrated improves your mood. Less grumpy, more productive!\\n\",\"Don't underestimate the power of pure H2O. It's mighty!\\n\",\"For sharper eyesight, keep your body well-watered. It's connected!\\n\",\"Your joints need water for smooth movement. Keep them lubed!\\n\",\"Water is more important than kopi. Prioritize, recruit!\\n\",\"Feeling hot like sambal? Water cools you down from the inside!\\n\",\"Dehydration can make you clumsy. Stay stable, stay hydrated!\\n\",\"From your head to your toes, water helps everything flow. Drink up!\\n\",\"Your internal systems are on duty. Support them with water!\\n\",\"Don't run on empty! Refuel your body with water.\\n\",\"This message is brought to you by your friendly hydration reminder. Now drink!\\n\",\"Water helps transport nutrients throughout your body. Power up your cells!\\n\",\"Your body loses water constantly. Top up to maintain balance!\\n\",\"For peak mental clarity, ensure you're well-hydrated. Think fast!\\n\",\"A sip now keeps the headache away. Smart choice!\\n\",\"Water is the best thirst quencher. Nothing else comes close, mah!\\n\",\"Remember your duty to your body: hydrate, hydrate, hydrate!\\n\",\"Don't let your discipline slip. Drink your water, steady!\\n\",\"Your digestive system loves water. Give it what it needs!\\n\",\"Water helps you recover faster after any exertion. Be efficient!\\n\",\"For healthy skin, make water your best beauty product.\\n\",\"Your muscles need water to contract properly. Keep them strong!\\n\",\"Feeling a bit woozy? Dehydration might be the culprit. Drink!\\n\",\"Water helps flush toxins out of your system. Cleanse yourself!\\n\",\"Don't be a dehydrated legend. Be a hydrated one!\\n\",\"Every time you pass a water cooler, take a sip. Good habit!\\n\",\"Stay cool, stay collected, stay hydrated. It's the army way!\\n\",\"Water: the unsung hero of your daily routine. Appreciate it!\\n\",\"Your body is shouting for water. Don't ignore the calls!\\n\",\"Even when it's cool, you're losing water. Keep sipping!\\n\",\"For better performance during any task, water is key. Don't forget!\\n\",\"Don't be caught off-guard by thirst. Drink proactively!\\n\",\"Water helps regulate your body temperature. Stay chill!\\n\",\"This isn't just liquid; it's health in a bottle. Drink it all!\\n\",\"Your body is mostly water. Keep your main component topped up!\\n\",\"Don't let a dry mouth be your only reminder. Drink consistently!\\n\",\"Water aids in joint lubrication, keeping you agile and mobile.\\n\",\"For vibrant energy levels throughout the day, prioritize water!\\n\",\"Hydration is key to avoiding muscle fatigue. Keep pushing!\\n\",\"Your body's natural detox process relies on water. Help it out!\\n\",\"Don't neglect your fluid intake, it's as important as food.\\n\",\"Water is your secret weapon against the afternoon slump. Sip away!\\n\",\"Feeling sluggish? Water is often the simplest solution to perk up.\\n\",\"For healthy digestion and regular bowel movements, drink water!\\n\",\"Your skin elasticity depends on good hydration. Stay supple!\\n\",\"Water helps in nutrient absorption. Make your meals work harder!\\n\",\"Don't let dehydration lead to headaches. Prevent it with water!\\n\",\"Your body works hard for you. Hydrate it as a thank you!\\n\",\"Stay hydrated to support your metabolism. Burn fat efficiently!\\n\",\"Water helps regulate your blood sugar levels. Stay balanced!\\n\",\"For optimal sports performance, water is a non-negotiable. Train smart!\\n\",\"Your brain communicates better when well-hydrated. Clear thoughts!\\n\",\"Don't let a dry throat affect your singing voice. Stay hydrated!\\n\",\"Water is essential for saliva production. Keep that mouth fresh!\\n\",\"For optimum kidney function, give them plenty of water to work with!\\n\",\"Water is essential for healthy circulation. Keep that blood flowing!\\n\",\"Feeling groggy? Hydrate to awaken your senses!\\n\",\"Your body depends on water for almost every function. Support it!\\n\",\"Don't let dehydration be your downfall. Rise above it, drink!\\n\",\"Every sip is an investment in your well-being. Good investment!\\n\",\"Water helps maintain fluid balance. Keep yourself balanced, soldier!\\n\",\"For better concentration, ensure your brain is well-hydrated. Focus!\\n\",\"Don't let a dry throat distract you. Water is the solution!\\n\",\"Your body needs water like Singapore needs sunshine. Essential!\\n\",\"Remember the 'lim zui' mantra. Repeat after me: 'lim zui'!\\n\",\"Water: it's not just a drink, it's a lifestyle. Live hydrated!\\n\",\"For resilient skin, water is your secret weapon. Glow from within!\\n\",\"Your body recovers best when hydrated. Give it a helping hand!\\n\",\"Feeling irritable? Sometimes it's just your body crying for water.\\n\",\"Water helps maintain your body's electrolyte balance. Stay balanced!\\n\",\"Don't let your energy levels crash. Water is your co-pilot!\\n\",\"Your vision might blur without enough water. Keep your eyes sharp!\\n\",\"For quick recovery after physical exertion, reach for water!\\n\",\"Hydration: the simplest way to boost your overall health.\\n\",\"Your body cells are signaling for water. Respond to the call!\\n\",\"Don't be parched; be prepared. Always have water!\\n\",\"Water helps transport oxygen to your muscles. Breathe easy, drink!\\n\",\"For optimal brain function, keep the water flowing. Smart choice!\\n\",\"Feeling tired even after sleep? Dehydration could be a factor. Drink!\\n\",\"Water helps regulate your internal temperature on hot days. Stay cool!\\n\",\"This isn't just plain water; it's pure goodness for your system!\\n\",\"Your body is mostly water. Keep your main component topped up!\\n\",\"Don't let a dry mouth be your only reminder. Drink consistently!\\n\",\"Water aids in joint lubrication, keeping you agile and mobile.\\n\",\"For vibrant energy levels throughout the day, prioritize water!\\n\",\"Hydration is key to avoiding muscle fatigue. Keep pushing!\\n\",\"Your body's natural detox process relies on water. Help it out!\\n\",\"Don't neglect your fluid intake, it's as important as food.\\n\",\"Water is your secret weapon against the afternoon slump. Sip away!\\n\",\"Feeling sluggish? Water is often the simplest solution to perk up.\\n\",\"For healthy digestion and regular bowel movements, drink water!\\n\",\"Your skin elasticity depends on good hydration. Stay supple!\\n\",\"Water helps in nutrient absorption. Make your meals work harder!\\n\",\"Don't let dehydration lead to headaches. Prevent it with water!\\n\",\"Your body works hard for you. Hydrate it as a thank you!\\n\",\"Stay hydrated to support your metabolism. Burn fat efficiently!\\n\",\"Water helps regulate your blood sugar levels. Stay balanced!\\n\",\"For optimal sports performance, water is a non-negotiable. Train smart!\\n\",\"Your brain communicates better when well-hydrated. Clear thoughts!\\n\",\"Don't let a dry throat affect your singing voice. Stay hydrated!\\n\",\"Water is essential for saliva production. Keep that mouth fresh!\\n\",\"For optimum kidney function, give them plenty of water to work with!\\n\",\"Water is essential for healthy circulation. Keep that blood flowing!\\n\",\"Feeling groggy? Hydrate to awaken your senses!\\n\",\"Your body depends on water for almost every function. Support it!\\n\",\"Don't let dehydration be your downfall. Rise above it, drink!\\n\",\"Every sip is an investment in your well-being. Good investment!\\n\",\"Water helps maintain fluid balance. Keep yourself balanced, soldier!\\n\",\"For better concentration, ensure your brain is well-hydrated. Focus!\\n\",\"Don't let a dry throat distract you. Water is the solution!\\n\",\"Your body needs water like Singapore needs sunshine. Essential!\\n\",\"Remember the 'lim zui' mantra. Repeat after me: 'lim zui'!\\n\",\"Water: it's not just a drink, it's a lifestyle. Live hydrated!\\n\",\"For resilient skin, water is your secret weapon. Glow from within!\\n\",\"Your body recovers best when hydrated. Give it a helping hand!\\n\",\"Feeling irritable? Sometimes it's just your body crying for water.\\n\",\"Water helps maintain your body's electrolyte balance. Stay balanced!\\n\",\"Don't let your energy levels crash. Water is your co-pilot!\\n\",\"Your vision might blur without enough water. Keep your eyes sharp!\\n\",\"For quick recovery after physical exertion, reach for water!\\n\",\"Hydration: the simplest way to boost your overall health.\\n\",\"Your body cells are signaling for water. Respond to the call!\\n\",\"Don't be parched; be prepared. Always have water!\\n\",\"Water helps transport oxygen to your muscles. Breathe easy, drink!\\n\",\"For optimal brain function, keep the water flowing. Smart choice!\\n\",\"Feeling tired even after sleep? Dehydration could be a factor. Drink!\\n\",\"Water helps regulate your internal temperature on hot days. Stay cool!\\n\",\"This isn't just plain water; it's pure goodness for your system!\\n\"]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 580,
+        "y": 100,
+        "wires": [
+            [
+                "4e40f995c1d628bf"
+            ]
+        ]
+    },
+    {
+        "id": "1038f3ce822be854",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "Message Sent Check - Debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2190,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "a27d0045603cc5a2",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "g": "572d9bd9cde28375",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 800,
+        "wires": [
+            [
+                "4092c57a5118c030"
+            ]
+        ]
+    },
+    {
+        "id": "d55fb62eba9167ba",
+        "type": "file in",
+        "z": "f6f2187d.f17ca8",
+        "g": "affd9008b8fab86b",
+        "name": "Read Recipients File",
+        "filename": "/data/recipients.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 540,
+        "y": 220,
+        "wires": [
+            [
+                "da2ad8afce18c9ca"
+            ]
+        ]
+    },
+    {
+        "id": "d8212c5529cb4ee4",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "affd9008b8fab86b",
+        "name": "Format Telegram Payload",
+        "func": "// At this point, msg.payload is ALREADY a parsed array/object thanks to the JSON node\nconst recipients = msg.payload;\n\n// Ensure we have a valid array\nif (!Array.isArray(recipients)) {\n    node.error(\"Expected an array of recipients, but received something else.\", msg);\n    return null;\n}\n\n// Retrieve the saved reminder text\nconst reminderText = msg.reminder || \"FALL IN! Time to hydrate, Recruit! 🚰\";\n\n// Filter for active users only (enabled: true or undefined)\nconst activeRecipients = recipients.filter(user => user.enabled !== false);\n\n// If no active recruits, stop processing\nif (activeRecipients.length === 0) {\n    return null;\n}\n\n// Map each active recipient into an individual Telegram message object\nconst messages = activeRecipients.map(user => ({\n    payload: {\n        chatId: user.chatId,\n        type: \"message\",\n        content: `Attention Recruit ${user.name}!\\n\\n${reminderText}`,\n        parse_mode: \"Markdown\"\n    }\n}));\n\n// Return array of messages so Node-RED emits them individually to Telegram Sender\nreturn [messages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 320,
+        "wires": [
+            [
+                "8c75107f22aa3659"
+            ]
+        ]
+    },
+    {
+        "id": "da2ad8afce18c9ca",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "g": "affd9008b8fab86b",
+        "name": "Pre-Formatting",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 800,
+        "y": 220,
+        "wires": [
+            [
+                "d8212c5529cb4ee4"
+            ]
+        ]
+    },
+    {
+        "id": "28427f19a1e45819",
+        "type": "telegram receiver",
+        "z": "f6f2187d.f17ca8",
+        "g": "a8a3df5510d2fcc6",
+        "name": "Telegram Receiver",
+        "bot": "2059cd5c82b74717",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "x": 130,
+        "y": 500,
+        "wires": [
+            [
+                "faa6e2ae01a535d0"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "faa6e2ae01a535d0",
+        "type": "switch",
+        "z": "f6f2187d.f17ca8",
+        "g": "a8a3df5510d2fcc6",
+        "name": "Route Command",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "/fall_in",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "/fall_out",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 150,
+        "y": 600,
+        "wires": [
+            [
+                "e1e53064dca7b372"
+            ],
+            [
+                "70ed52c3c980704d"
+            ]
+        ]
+    },
+    {
+        "id": "e1e53064dca7b372",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "a8a3df5510d2fcc6",
+        "name": "Set Action Start (3a) - Enroll User into list receievers",
+        "func": "// Preserve telegram details and set action flag\nmsg.action = \"start\";\nmsg.userChatId = msg.payload.chatId;\nmsg.firstName = msg.originalMessage?.from?.first_name || \"Recruit\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 560,
+        "wires": [
+            [
+                "f9baae5c913558cf"
+            ]
+        ]
+    },
+    {
+        "id": "70ed52c3c980704d",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "a8a3df5510d2fcc6",
+        "name": "Set Action Stop (3b) - Remove users from list of receievers",
+        "func": "// Preserve telegram details and set action flag\nmsg.action = \"stop\";\nmsg.userChatId = msg.payload.chatId;\nmsg.firstName = msg.originalMessage?.from?.first_name || \"Recruit\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 620,
+        "wires": [
+            [
+                "f9baae5c913558cf"
+            ]
+        ]
+    },
+    {
+        "id": "f9baae5c913558cf",
+        "type": "file in",
+        "z": "f6f2187d.f17ca8",
+        "g": "a8a3df5510d2fcc6",
+        "name": "Read Recipients List File",
+        "filename": "/data/recipients.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 930,
+        "y": 580,
+        "wires": [
+            [
+                "6dd3095787069fe9"
+            ]
+        ]
+    },
+    {
+        "id": "6dd3095787069fe9",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "g": "a8a3df5510d2fcc6",
+        "name": "Parse String",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 930,
+        "y": 640,
+        "wires": [
+            [
+                "72c033f5b03bcbbb"
+            ]
+        ]
+    },
+    {
+        "id": "72c033f5b03bcbbb",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "a8a3df5510d2fcc6",
+        "name": "Manage Subscription",
+        "func": "// Read current recipients array from file\nlet recipients = Array.isArray(msg.payload) ? msg.payload : [];\n\nconst chatId = msg.userChatId;\nconst firstName = msg.firstName;\nconst action = msg.action;\n\nlet existingUser = recipients.find(u => String(u.chatId) === String(chatId));\nlet replyText = \"\";\n\nif (action === \"start\") {\n    if (existingUser) {\n        if (existingUser.enabled === false) {\n            existingUser.enabled = true;\n            replyText = `FALL IN! Welcome back, Recruit ${firstName}! Re-subscribed to Nag Master 3000! 💧`;\n        } else {\n            replyText = `Recruit ${firstName}, you already fell in long ago! Keep drinking water, don't blur! 🚰`;\n        }\n    } else {\n        recipients.push({\n            name: firstName,\n            chatId: chatId,\n            enabled: true\n        });\n        replyText = `FALL IN! Welcome to the platoon, Recruit ${firstName}! Hydration reminders locked and loaded! 🚰`;\n    }\n} else if (action === \"stop\") {\n    if (existingUser && existingUser.enabled !== false) {\n        existingUser.enabled = false;\n        replyText = `FALL OUT! Goodbye Recruit ${firstName}. You are dismissed from reminders. Send /fall-in anytime to report back! 👋`;\n    } else {\n        replyText = `Recruit ${firstName}, you aren't even in the platoon! Send /fall-in if you want to join!`;\n    }\n}\n\n// Output 1: Stringify array so File Out saves valid JSON format\nconst fileMsg = { payload: JSON.stringify(recipients, null, 2) };\n\n// Output 2: Confirmation reply back to Telegram user\nconst replyMsg = {\n    payload: {\n        chatId: chatId,\n        type: \"message\",\n        content: replyText\n    }\n};\n\nreturn [fileMsg, replyMsg];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1200,
+        "y": 640,
+        "wires": [
+            [
+                "16edf6c55979257f"
+            ],
+            [
+                "8c75107f22aa3659"
+            ]
+        ]
+    },
+    {
+        "id": "16edf6c55979257f",
+        "type": "file",
+        "z": "f6f2187d.f17ca8",
+        "g": "a8a3df5510d2fcc6",
+        "name": "Save Recipients",
+        "filename": "/data/recipients.json",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1220,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0852121dea5aa14b",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "g": "572d9bd9cde28375",
+        "name": "Debug - Check Recipient list",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "4092c57a5118c030",
+        "type": "file in",
+        "z": "f6f2187d.f17ca8",
+        "g": "572d9bd9cde28375",
+        "name": "Read Recipients List File",
+        "filename": "/data/recipients.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 350,
+        "y": 800,
+        "wires": [
+            [
+                "981e923b3585135c"
+            ]
+        ]
+    },
+    {
+        "id": "981e923b3585135c",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "g": "572d9bd9cde28375",
+        "name": "Convert Recipient List into json",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 800,
+        "wires": [
+            [
+                "0852121dea5aa14b"
+            ]
+        ]
+    },
+    {
+        "id": "e41824da82948b0c",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "g": "a0427897c5b3104e",
+        "name": "Get AQ data from NEA API",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api-open.data.gov.sg/v2/real-time/api/pm25",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 180,
+        "y": 1080,
+        "wires": [
+            [
+                "8b9f0c622786c12e"
+            ]
+        ]
+    },
+    {
+        "id": "8b9f0c622786c12e",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "a0427897c5b3104e",
+        "name": "Parse & Format Air Quality",
+        "func": "const response = msg.payload;\n\ntry {\n    // Access readings under payload.data.items[0].readings\n    const items = response?.data?.items || [];\n    const readings = items[0]?.readings || {};\n    const pm25OneHr = readings.pm25_one_hourly || {};\n\n    const regions = ['north', 'south', 'east', 'west', 'central'];\n    \n    // Determine action advisory based on 1-hour PM2.5 levels\n    function getAction(pm25) {\n        if (pm25 >= 251) {\n            return \"MINIMISE all outdoor activity\";\n        } else if (pm25 >= 151) {\n            return \"AVOID strenuous outdoor activity\";\n        } else if (pm25 >= 56) {\n            return \"REDUCE strenuous outdoor activity\";\n        }\n        return \"CONTINUE with normal activities\";\n    }\n\n    let regionReports = [];\n\n    regions.forEach(region => {\n        const pm25 = pm25OneHr[region] ?? 'N/A';\n        const action = typeof pm25 === 'number' ? getAction(pm25) : 'N/A';\n        \n        // Capitalize region name\n        const regionName = region.charAt(0).toUpperCase() + region.slice(1);\n        \n        regionReports.push(\n            `*${regionName}:* 1-hr PM2.5 - ${pm25} µg/m³\\n` +\n            ` • *Action:* ${action}`\n        );\n    });\n\n    const message = `🌬️ *Singapore Hourly Air Quality Advisory*\\n\\n` + \n                    regionReports.join('\\n\\n');\n\n    msg.reminder = message;\n    return msg;\n} catch (e) {\n    node.error(\"Failed to parse Air Quality API data: \" + e.message, msg);\n    return null;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 1080,
+        "wires": [
+            [
+                "aba2db886624c3e1"
+            ]
+        ]
+    },
+    {
+        "id": "aba2db886624c3e1",
+        "type": "file in",
+        "z": "f6f2187d.f17ca8",
+        "g": "a0427897c5b3104e",
+        "name": "Read Recipients File",
+        "filename": "/data/recipients.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 180,
+        "y": 1180,
+        "wires": [
+            [
+                "46a2ec19682c18ec"
+            ]
+        ]
+    },
+    {
+        "id": "46a2ec19682c18ec",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "g": "a0427897c5b3104e",
+        "name": "Parse Subscribers File",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 540,
+        "y": 1180,
+        "wires": [
+            [
+                "f72c7674168df4b1"
+            ]
+        ]
+    },
+    {
+        "id": "f72c7674168df4b1",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "a0427897c5b3104e",
+        "name": "Format Telegram Payload",
+        "func": "const recipients = msg.payload;\n\nif (!Array.isArray(recipients)) {\n    node.error(\"Expected an array of recipients in /data/recipients.json\", msg);\n    return null;\n}\n\nconst airReport = msg.reminder;\nconst activeRecipients = recipients.filter(user => user.enabled !== false);\n\nif (activeRecipients.length === 0) {\n    return null;\n}\n\nconst messages = activeRecipients.map(user => ({\n    payload: {\n        chatId: user.chatId,\n        type: \"message\",\n        content: `Attention Recruit ${user.name}!\\n\\n${airReport}`,\n        parse_mode: \"Markdown\"\n    }\n}));\n\nreturn [messages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 1180,
+        "wires": [
+            [
+                "8c75107f22aa3659"
+            ]
+        ]
+    },
+    {
+        "id": "e40d458e80f065b0",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "g": "a0427897c5b3104e",
+        "name": "Hourly Schedule (08:01 - 22:01 SGT)",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "0 0-13 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 1000,
+        "wires": [
+            [
+                "ecd23d051c17ae41"
+            ]
+        ]
+    },
+    {
+        "id": "ecd23d051c17ae41",
+        "type": "delay",
+        "z": "f6f2187d.f17ca8",
+        "g": "a0427897c5b3104e",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 440,
+        "y": 1000,
+        "wires": [
+            [
+                "e41824da82948b0c"
+            ]
+        ]
+    },
+    {
+        "id": "<TELEGRAM_BOT_TOKEN>",
+        "type": "telegram bot",
+        "botname": "<Your Bot Name>",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbothost": "0.0.0.0",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "b655cd3a8503c660",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-telegrambot": "17.0.3"
+        }
+    }
+]
